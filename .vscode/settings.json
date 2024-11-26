@@ -1,0 +1,5 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cmake.sourceDirectory": "/home/ben/Documents/Projet/telemed_app/linux/flutter",
+  "cmake.ignoreCMakeListsMissing": true
+}

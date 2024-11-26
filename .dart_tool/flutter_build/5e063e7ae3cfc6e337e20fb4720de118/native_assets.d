@@ -1,0 +1,1 @@
+ /home/ben/Documents/Projet/vscode/telemed_app/.dart_tool/flutter_build/5e063e7ae3cfc6e337e20fb4720de118/native_assets.yaml: 
