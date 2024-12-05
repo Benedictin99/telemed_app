@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import NaveBar from "../utils/NaveBar";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -9,12 +10,9 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <div className="text-center">
-        <h1 className="text-red-500 m-10">Home</h1>
-      </div>
+    <div className="h-full w-full">
+      <NaveBar />
       <div className="justify-center items-center flex flex-col h-screen">
-        <h1 className="mb-20">0.00</h1>
         <button
           type="button"
           onClick={handleBtn}
