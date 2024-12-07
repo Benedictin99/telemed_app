@@ -5,7 +5,7 @@ const Welcome = () => {
   return (
     <>
       <Navbar />
-      <div>Welcome page</div>
+      <div>Welcome pages</div>
     </>
   );
 };
