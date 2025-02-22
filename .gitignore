@@ -8,6 +8,9 @@ frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 frontend/lerna-debug.log*
 
+## Google config
+backend/google.config.json
+
 # backend
 backend/logs
 backend/*.log

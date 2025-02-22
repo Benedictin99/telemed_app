@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { validateRegistration } from "../utils/validation";
+import authService from "../services/authService";
 
 const Register = () => {
   const { register } = useAuth();
@@ -57,6 +58,10 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    authService.initiateGoogleAuth();
   };
 
   const containerVariants = {
@@ -255,12 +260,8 @@ const Register = () => {
             <motion.div variants={itemVariants} className="mt-6">
               <button
                 type="button"
-                disabled={!acceptTerms}
-                className={`w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg transition-all ${
-                  acceptTerms
-                    ? "hover:border-gray-400 hover:bg-gray-50"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg transition-all hover:border-gray-400 hover:bg-gray-50"
               >
                 <FcGoogle className="h-5 w-5 mr-2" />
                 <span className="text-sm font-medium text-gray-700">

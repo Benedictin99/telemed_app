@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import authService from "../services/authService";
 
 const Login = () => {
   const { login } = useAuth();
@@ -30,6 +31,10 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    authService.initiateGoogleAuth();
   };
 
   const containerVariants = {
@@ -156,6 +161,7 @@ const Login = () => {
             <motion.div variants={itemVariants} className="mt-6">
               <button
                 type="button"
+                onClick={handleGoogleLogin}
                 className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg transition-all hover:border-gray-400 hover:bg-gray-50"
               >
                 <FcGoogle className="h-5 w-5 mr-2" />

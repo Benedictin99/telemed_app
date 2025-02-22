@@ -36,14 +36,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    authService.logout();
-    setUser(null);
+    try {
+      authService.logout();
+      setUser(null);
+      // Forcer une redirection vers la page de login
+      window.location.href = "/login"; // Au lieu de utiliser navigate
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         login,
         register,
         logout,
@@ -56,5 +63,11 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error(
+      "useAuth doit être utilisé à l'intérieur d'un AuthProvider"
+    );
+  }
+  return context;
 };

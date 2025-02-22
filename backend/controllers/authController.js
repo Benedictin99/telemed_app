@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
 // Générer un token JWT
-const generateToken = (id) => {
+export const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
