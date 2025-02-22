@@ -3,9 +3,9 @@ import PrivateRoute from "../components/PrivateRoute";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
-import AuthSuccess from "../pages/AuthSuccess";
-import PrivacyPolicy from "../pages/PrivacyPolicy";
-import Terms from "../pages/Terms";
+import AuthSuccess from "../components/google/AuthSuccess";
+import Terms from "../components/google/Terms";
+import PrivacyPolicy from "../components/google/PrivacyPolicy";
 
 const AppRoutes = () => {
   return (
@@ -27,8 +27,8 @@ const AppRoutes = () => {
       {/* Redirection par défaut vers login */}
       <Route path="*" element={<Navigate to="/login" />} />
 
+      {/* Routes Google Auth */}
       <Route path="/auth/success" element={<AuthSuccess />} />
-
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<Terms />} />
     </Routes>
