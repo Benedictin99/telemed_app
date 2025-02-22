@@ -3,8 +3,11 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useAuth } from "../contexts/AuthContext.jsx";
+import { validateRegistration } from "../utils/validation";
 
 const Register = () => {
+  const { register } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -13,10 +16,47 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Inscription avec:", formData);
+
+    // Validation côté client
+    const validationErrors = validateRegistration(formData);
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(" | "));
+      return;
+    }
+
+    if (!acceptTerms) {
+      setError("Veuillez accepter les conditions d'utilisation");
+      return;
+    }
+
+    try {
+      setError("");
+      setLoading(true);
+      await register(formData.name, formData.email, formData.password);
+      navigate("/dashboard");
+    } catch (error) {
+      // Gérer l'erreur du serveur
+      if (typeof error === "string") {
+        setError(error);
+      } else if (error.message) {
+        setError(error.message);
+      } else {
+        setError("Une erreur est survenue lors de la création du compte");
+      }
+
+      // Réinitialiser le mot de passe
+      setFormData((prev) => ({
+        ...prev,
+        password: "",
+      }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -73,6 +113,33 @@ const Register = () => {
               Veuiller remplir les champs ci-dessous pour créer un compte
             </motion.p>
           </div>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border-l-4 border-red-400 p-4 mb-4"
+            >
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-5 w-5 text-red-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           <motion.form
             variants={containerVariants}
@@ -149,14 +216,39 @@ const Register = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                disabled={!acceptTerms}
+                disabled={!acceptTerms || loading}
                 className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
-                  acceptTerms
+                  acceptTerms && !loading
                     ? "bg-yellow-400 text-gray-900 hover:bg-yellow-500"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                Créer un compte
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-gray-700"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Création en cours...
+                  </div>
+                ) : (
+                  "Créer un compte"
+                )}
               </motion.button>
             </motion.div>
 
