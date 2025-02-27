@@ -11,19 +11,23 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Vérifier si l'utilisateur existe déjà
         let user = await User.findOne({ email: profile.emails[0].value });
 
         if (user) {
+          // Mettre à jour la photo si nécessaire
+          if (profile.photos && profile.photos[0]) {
+            user.picture = profile.photos[0].value;
+            await user.save();
+          }
           return done(null, user);
         }
 
-        // Créer un nouvel utilisateur
         user = await User.create({
           name: profile.displayName,
           email: profile.emails[0].value,
-          password: "google-auth", // Mot de passe fictif
+          password: "google-auth",
           googleId: profile.id,
+          picture: profile.photos ? profile.photos[0].value : null,
           role: "patient",
         });
 
